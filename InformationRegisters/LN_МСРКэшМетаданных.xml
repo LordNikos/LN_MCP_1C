@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.20">
+	<InformationRegister uuid="a7b8c9d0-e1f2-3456-0123-789012345abc">
+		<InternalInfo>
+			<xr:GeneratedType name="InformationRegisterRecord.LN_МСРКэшМетаданных" category="Record">
+				<xr:TypeId>c9fb36a1-2045-47d2-9272-397c63eebe62</xr:TypeId>
+				<xr:ValueId>b2cb7bfe-f0a4-4d79-b3df-9065b17986ad</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="InformationRegisterManager.LN_МСРКэшМетаданных" category="Manager">
+				<xr:TypeId>5fe94c6e-40c9-43b2-95df-dbadd645fe18</xr:TypeId>
+				<xr:ValueId>34658f09-9f2e-46c4-9bc9-81714bba1c3e</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="InformationRegisterSelection.LN_МСРКэшМетаданных" category="Selection">
+				<xr:TypeId>c9e7beee-3636-4bc3-83d0-0378741a6342</xr:TypeId>
+				<xr:ValueId>92e91388-8558-4cac-a5e9-02c0b40ebcef</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="InformationRegisterList.LN_МСРКэшМетаданных" category="List">
+				<xr:TypeId>a491faaf-6f92-4555-b077-b16a903b565c</xr:TypeId>
+				<xr:ValueId>7d7d45a2-1497-45c2-aaa7-da150d1c73e3</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="InformationRegisterRecordSet.LN_МСРКэшМетаданных" category="RecordSet">
+				<xr:TypeId>2c4e47dc-1f6c-4afe-bcc9-e7a672638801</xr:TypeId>
+				<xr:ValueId>47902108-6af3-427f-a1bc-c877b8c87114</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="InformationRegisterRecordKey.LN_МСРКэшМетаданных" category="RecordKey">
+				<xr:TypeId>507c03b4-4efd-489b-80f4-5edd2050cc79</xr:TypeId>
+				<xr:ValueId>47b50b33-6f09-4e29-9342-ab58b2859d71</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="InformationRegisterRecordManager.LN_МСРКэшМетаданных" category="RecordManager">
+				<xr:TypeId>f6f95224-b28b-4272-904d-bffddce93995</xr:TypeId>
+				<xr:ValueId>ce76dff6-736d-4a86-96b9-5f74f0571f01</xr:ValueId>
+			</xr:GeneratedType>
+		</InternalInfo>
+		<Properties>
+			<Name>LN_МСРКэшМетаданных</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>МСР Кэш метаданных (LN)</v8:content>
+				</v8:item>
+			</Synonym>
+			<Comment>TTL-кэш ответов tool-ов (get_metadata, describe_form, get_configuration). Ключ — md5 (имя_tool+JSON_аргументов).</Comment>
+			<UseStandardCommands>true</UseStandardCommands>
+			<EditType>InDialog</EditType>
+			<InformationRegisterPeriodicity>Nonperiodical</InformationRegisterPeriodicity>
+			<WriteMode>Independent</WriteMode>
+			<MainFilterOnPeriod>false</MainFilterOnPeriod>
+			<IncludeHelpInContents>false</IncludeHelpInContents>
+			<DataLockControlMode>Managed</DataLockControlMode>
+			<FullTextSearch>DontUse</FullTextSearch>
+			<EnableTotalsSliceFirst>false</EnableTotalsSliceFirst>
+			<EnableTotalsSliceLast>false</EnableTotalsSliceLast>
+			<DataHistory>DontUse</DataHistory>
+			<UpdateDataHistoryImmediatelyAfterWrite>false</UpdateDataHistoryImmediatelyAfterWrite>
+			<ExecuteAfterWriteDataHistoryVersionProcessing>false</ExecuteAfterWriteDataHistoryVersionProcessing>
+		</Properties>
+		<ChildObjects>
+			<Dimension uuid="22222222-2222-2222-2222-222222222201">
+				<Properties>
+					<Name>Ключ</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Ключ</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>64</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+					<FillChecking>ShowError</FillChecking>
+					<Master>true</Master>
+					<MainFilter>true</MainFilter>
+					<Indexing>Index</Indexing>
+				</Properties>
+			</Dimension>
+			<Resource uuid="22222222-2222-2222-2222-222222222202">
+				<Properties>
+					<Name>Данные</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Данные</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>v8:ValueStorage</v8:Type>
+					</Type>
+				</Properties>
+			</Resource>
+			<Resource uuid="22222222-2222-2222-2222-222222222203">
+				<Properties>
+					<Name>ВремяСоздания</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Время создания</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:dateTime</v8:Type>
+						<v8:DateQualifiers>
+							<v8:DateFractions>DateTime</v8:DateFractions>
+						</v8:DateQualifiers>
+					</Type>
+				</Properties>
+			</Resource>
+			<Resource uuid="22222222-2222-2222-2222-222222222204">
+				<Properties>
+					<Name>СрокДействияСек</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Срок действия, сек</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:decimal</v8:Type>
+						<v8:NumberQualifiers>
+							<v8:Digits>10</v8:Digits>
+							<v8:FractionDigits>0</v8:FractionDigits>
+							<v8:AllowedSign>Nonnegative</v8:AllowedSign>
+						</v8:NumberQualifiers>
+					</Type>
+				</Properties>
+			</Resource>
+		</ChildObjects>
+	</InformationRegister>
+</MetaDataObject>

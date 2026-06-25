@@ -1,0 +1,38 @@
+# ============================================================
+#  Конфигурация Apache 2.4 для публикации LN_MCP_1C
+#  Вставить в C:\Apache24\conf\httpd.conf (или conf.d\1c.conf)
+# ============================================================
+
+# 1) Подключить модуль веб-сервера 1С (путь к wsap24.dll взять под свой релиз платформы)
+LoadModule _1cws_module "C:/Program Files/1cv8/8.3.20.xxxx/bin/wsap24.dll"
+
+# 2) Alias для публикации
+Alias "/mcp_cspxml" "C:/inetpub/mcp_cspxml/"
+
+<Directory "C:/inetpub/mcp_cspxml/">
+    AllowOverride All
+    Options None
+    Require all granted
+
+    SetHandler 1c-application
+    ManagedApplicationDescriptor "C:/inetpub/mcp_cspxml/default.vrd"
+</Directory>
+
+# 3) (Опционально) HTTP Basic Auth — защита эндпоинтов от анонимных клиентов
+<Location "/mcp_cspxml/hs/mcp/">
+    AuthType Basic
+    AuthName "LN_MCP_1C"
+    AuthUserFile "C:/Apache24/auth/.htpasswd-mcp"
+    Require valid-user
+</Location>
+
+# 4) CORS — если MCP-клиент работает в браузере (Web-обёртка)
+<Location "/mcp_cspxml/hs/mcp/">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Headers "Authorization, Content-Type, X-MCP-Format"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+</Location>
+
+# 5) (Опционально) лог только для MCP-эндпоинтов
+CustomLog "logs/mcp_access.log" combined env=mcp_endpoint
+SetEnvIf Request_URI "^/mcp_cspxml/hs/mcp/" mcp_endpoint

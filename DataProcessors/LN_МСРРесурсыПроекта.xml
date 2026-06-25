@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.20">
+	<DataProcessor uuid="b5e9c4a1-3f72-4d8b-94c2-1ae6d70f12c5">
+		<InternalInfo>
+			<xr:GeneratedType name="DataProcessorObject.LN_МСРРесурсыПроекта" category="Object">
+				<xr:TypeId>b5e9c4a1-1200-aaaa-0000-000000000001</xr:TypeId>
+				<xr:ValueId>b5e9c4a1-1200-aaaa-0000-000000000002</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="DataProcessorManager.LN_МСРРесурсыПроекта" category="Manager">
+				<xr:TypeId>b5e9c4a1-1200-aaaa-0000-000000000003</xr:TypeId>
+				<xr:ValueId>b5e9c4a1-1200-aaaa-0000-000000000004</xr:ValueId>
+			</xr:GeneratedType>
+		</InternalInfo>
+		<Properties>
+			<Name>LN_МСРРесурсыПроекта</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>MCP контейнер: ресурсы проекта (общие модули, роли, СКД, MXL)</v8:content>
+				</v8:item>
+			</Synonym>
+			<Comment>Универсальный контейнер ресурсов для MCP. Адреса: file://ln/common-module/&lt;Имя&gt;, file://ln/role/&lt;Имя&gt;, file://ln/dcs/&lt;Отчёт&gt;, file://ln/mxl/&lt;Объект&gt;/&lt;Макет&gt;.</Comment>
+			<UseStandardCommands>false</UseStandardCommands>
+			<DefaultForm/>
+			<AuxiliaryForm/>
+			<IncludeHelpInContents>false</IncludeHelpInContents>
+			<ExtendedPresentation>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>MCP контейнер ресурсов проекта</v8:content>
+				</v8:item>
+			</ExtendedPresentation>
+		</Properties>
+		<ChildObjects/>
+	</DataProcessor>
+</MetaDataObject>

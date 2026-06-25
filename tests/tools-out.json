@@ -1,0 +1,755 @@
+{
+"jsonrpc": "2.0",
+"id": 1,
+"result": {
+"tools": [
+{
+"name": "execute_query",
+"description": "Выполняет запрос 1С на сервере и возвращает результат как массив строк. Поддерживает: именованные параметры, авто-конвертацию ISO-8601 → Дата, {type,uuid} → ссылка, опц. схему колонок, жёсткий лимит, курсорную пагинацию (page_size + cursor).",
+"inputSchema": {
+"type": "object",
+"properties": {
+"query": {
+"type": "string",
+"description": "Текст запроса 1С"
+},
+"parameters": {
+"type": "object",
+"description": "Параметры запроса (имя→значение). Строки в формате ISO-8601 (yyyy-MM-dd[Thh:mm:ss]) авто-конвертируются в Дату. Структуры вида {type,uuid} — в навигационные ссылки."
+},
+"limit": {
+"type": "number",
+"description": "Максимум возвращаемых строк ЗА ОДИН вызов (по умолчанию 100, максимум 10000)",
+"default": 100
+},
+"include_schema": {
+"type": "boolean",
+"description": "Если true — в ответе вернётся schema = список колонок с типами (имитация СформироватьСхемуРезультата).",
+"default": false
+},
+"page_size": {
+"type": "number",
+"description": "Размер страницы для курсорной пагинации. Если задан и > 0 — полный результат запроса кэшируется в РегистрСведений.LN_МСРКэшВыборок, отдаётся первая страница и next_cursor для последующих вызовов."
+},
+"cursor": {
+"type": "string",
+"description": "Курсор от предыдущего ответа. Если передан — query/parameters игнорируются, отдаётся следующая страница кэшированного результата."
+}
+},
+"required": [
+"query"
+]
+}
+},
+{
+"name": "execute_code",
+"description": "Выполняет произвольный код BSL на сервере. По умолчанию работает в ПОЛНОЦЕННОМ режиме (доступ к файлам/COM/HTTP/внешним обработкам).Безопасный режим включается только явно (safe_mode=true) или глобальной настройкой execute_code_default_safe.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"code": {
+"type": "string",
+"description": "Текст кода BSL. Должен присваивать значение переменной Результат."
+},
+"safe_mode": {
+"type": "boolean",
+"description": "Безопасный режим (УстановитьБезопасныйРежим + чёрный список ключевых слов). По умолчанию читается из настройки execute_code_default_safe регистра LN_МСРНастройки (если её нет — Ложь = ПОЛНОЦЕННЫЙ доступ)."
+}
+},
+"required": [
+"code"
+]
+}
+},
+{
+"name": "execute_dcs",
+"description": "Выполняет отчёт СКД и возвращает результат таблицей. Схема берётся из XML-строки, макета МД или файла на диске. Применяются параметры компоновщика, опционально — вариант настроек.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"schema_source": {
+"type": "string",
+"description": "Откуда взять схему СКД: \"xml\" (передаётся в schema_xml), \"template\" (макет МД из template_address), \"path\" (файл на диске из path).",
+"default": "xml",
+"enum": [
+"xml",
+"template",
+"path"
+]
+},
+"schema_xml": {
+"type": "string",
+"description": "XML-тело СхемыКомпоновкиДанных. Используется при schema_source=xml."
+},
+"template_address": {
+"type": "string",
+"description": "Полный адрес макета МД (например \"Отчет.АнализПродаж.МакетСхема\"). Используется при schema_source=template."
+},
+"path": {
+"type": "string",
+"description": "Путь к XML-файлу схемы СКД на диске. Используется при schema_source=path."
+},
+"parameters": {
+"type": "object",
+"description": "Параметры отчёта (имя→значение). Поддержка ISO-8601 дат и {type,uuid} ссылок аналогично execute_query."
+},
+"settings_variant": {
+"type": "string",
+"description": "Имя пользовательской вариантной настройки СКД (если есть). По умолчанию — настройки по умолчанию."
+},
+"limit": {
+"type": "number",
+"description": "Лимит строк результата (по умолчанию 100, максимум 10000)",
+"default": 100
+}
+},
+"required": [
+"schema_source"
+]
+}
+},
+{
+"name": "validate_query",
+"description": "Проверяет синтаксис запроса 1С без его выполнения. Возвращает valid=true/false, packets_count (для full режима), parameters (массив имён найденных параметров для fast), описание ошибки.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"query": {
+"type": "string",
+"description": "Текст запроса для валидации"
+},
+"fast": {
+"type": "boolean",
+"description": "true — быстрая валидация через Запрос.НайтиПараметры() (без полного парсинга, только синтаксис уровня параметров). false (по умолчанию) — полный парсинг через СхемаЗапроса (медленнее, найдёт больше ошибок).",
+"default": false
+}
+},
+"required": [
+"query"
+]
+}
+},
+{
+"name": "get_metadata",
+"description": "Возвращает структуру объекта метаданных: реквизиты, табличные части, измерения, ресурсы. Уровни: brief — только имена, normal — типы и синонимы, full — все свойства.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"object_name": {
+"type": "string",
+"description": "Полное имя объекта МД (например \"Справочник.Контрагенты\")"
+},
+"detail_level": {
+"type": "string",
+"description": "brief | normal | full (по умолчанию normal)",
+"default": "normal",
+"enum": [
+"brief",
+"normal",
+"full"
+]
+}
+},
+"required": [
+"object_name"
+]
+}
+},
+{
+"name": "get_configuration",
+"description": "Возвращает структуру с базовой информацией о конфигурации: имя, синоним, версия, поставщик, режим совместимости, режим управляемого приложения, статистика по типам объектов.",
+"inputSchema": {
+"type": "object",
+"properties": {}
+}
+},
+{
+"name": "describe_form",
+"description": "Возвращает структуру управляемой формы: реквизиты, команды, схему. На уровне метаданных (без открытия формы пользователем) доступны имя, синоним и список форм.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"object_name": {
+"type": "string",
+"description": "Полное имя объекта (например \"Справочник.Контрагенты\")"
+},
+"form_name": {
+"type": "string",
+"description": "Имя формы. Если не указано — берётся форма списка / форма по умолчанию."
+}
+},
+"required": [
+"object_name"
+]
+}
+},
+{
+"name": "list_extensions",
+"description": "Возвращает массив установленных в инфобазе расширений с их именами, версиями, поставщиками и статусом активности.",
+"inputSchema": {
+"type": "object",
+"properties": {}
+}
+},
+{
+"name": "get_bsl_syntax_help",
+"description": "Поиск по описанию синтаксиса встроенного языка (vendor template syntax_1c). Возвращает все блоки справки, содержащие topic в заголовке.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"topic": {
+"type": "string",
+"description": "Имя метода / типа для поиска в справке"
+}
+},
+"required": [
+"topic"
+]
+}
+},
+{
+"name": "read_form_xml",
+"description": "Читает Form.xml (и опционально Form.Module.bsl) управляемой формы напрямую с диска из дампа конфигурации. Дополняет describe_form реальной структурой элементов, доступ к которой невозможен из BSL в runtime через Метаданные.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"object_name": {
+"type": "string",
+"description": "Полное имя объекта МД (например \"Документ.РеализацияТоваровУслуг\"). Допустимо \"Конфигурация\" для общих форм."
+},
+"form_name": {
+"type": "string",
+"description": "Имя формы (например \"ФормаДокумента\")"
+},
+"dump_path": {
+"type": "string",
+"description": "Корневой путь дампа конфигурации (`DumpConfigToFiles` / `ibcmd infobase config export`). Если не задан — берётся из LN_МСРНастройки.config_dump_path."
+},
+"include_module": {
+"type": "boolean",
+"description": "Дополнительно вернуть Form.Module.bsl. По умолчанию false.",
+"default": false
+},
+"max_chars": {
+"type": "number",
+"description": "Лимит длины тела XML/BSL (по умолчанию 200000). 0 — без лимита.",
+"default": 200000
+}
+},
+"required": [
+"object_name",
+"form_name"
+]
+}
+},
+{
+"name": "get_object_by_link",
+"description": "Возвращает структуру объекта 1С (реквизиты + ТЧ) по его навигационной ссылке.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"link": {
+"type": "string",
+"description": "Навигационная ссылка 1С (e1cib://data/Справочник.Контрагенты?ref=...)"
+}
+},
+"required": [
+"link"
+]
+}
+},
+{
+"name": "get_link_of_object",
+"description": "Возвращает навигационную ссылку 1С для указанного объекта. Поиск по code или description.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"object_name": {
+"type": "string",
+"description": "Полное имя объекта (например \"Справочник.Контрагенты\")"
+},
+"code": {
+"type": "string",
+"description": "Код или номер объекта (для справочников/документов)"
+},
+"description": {
+"type": "string",
+"description": "Наименование объекта (поиск по наименованию)"
+}
+},
+"required": [
+"object_name"
+]
+}
+},
+{
+"name": "find_references_to_object",
+"description": "Возвращает массив объектов, ссылающихся на указанную ссылку. Использует НайтиПоСсылкам.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"link": {
+"type": "string",
+"description": "Навигационная ссылка объекта, ссылки на который нужно найти"
+},
+"max_items": {
+"type": "number",
+"description": "Максимум результатов (по умолчанию 100)",
+"default": 100
+}
+},
+"required": [
+"link"
+]
+}
+},
+{
+"name": "get_event_log",
+"description": "Выгружает журнал регистрации с курсорной пагинацией (без пропусков и дублей в пределах одной секунды). Возвращает entries, count, has_more, next_cursor. Поддерживает мульти-фильтры (массивы) по уровню/событию/МД/пользователям, точное совпадение по компьютеру, подстроку в комментарии и статус транзакции.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"start_date": {
+"type": "string",
+"description": "Начальная дата (yyyy-MM-ddTHH:mm:ss)"
+},
+"end_date": {
+"type": "string",
+"description": "Конечная дата (yyyy-MM-ddTHH:mm:ss)"
+},
+"levels": {
+"type": "array",
+"description": "Массив уровней: Info | Warning | Error | Note (либо русские аналоги).",
+"items": {
+"type": "string",
+"enum": [
+"Info",
+"Warning",
+"Error",
+"Note"
+]
+}
+},
+"events": {
+"type": "array",
+"description": "Массив имён событий (например MCP.tool.execute_query.Ошибка).",
+"items": {
+"type": "string"
+}
+},
+"metadata_types": {
+"type": "array",
+"description": "Полные имена МД для фильтра (Справочник.X, Документ.Y).",
+"items": {
+"type": "string"
+}
+},
+"users": {
+"type": "array",
+"description": "Массив имён пользователей или их UUID.",
+"items": {
+"type": "string"
+}
+},
+"computer": {
+"type": "string",
+"description": "Имя компьютера (точное совпадение)."
+},
+"comment_substring": {
+"type": "string",
+"description": "Подстрока в комментарии (нативный фильтр платформы)."
+},
+"transaction_status": {
+"type": "string",
+"description": "Статус транзакции: Committed | RolledBack | NotApplicable | Unfinished.",
+"enum": [
+"Committed",
+"RolledBack",
+"NotApplicable",
+"Unfinished"
+]
+},
+"page_size": {
+"type": "number",
+"description": "Размер страницы (по умолчанию 100, потолок 1000).",
+"default": 100
+},
+"cursor": {
+"type": "string",
+"description": "Base64-курсор следующей страницы (поле next_cursor из предыдущего ответа). Пусто — первая страница."
+},
+"max_items": {
+"type": "number",
+"description": "DEPRECATED: используйте page_size. Если задан — переопределяет page_size."
+}
+}
+}
+},
+{
+"name": "get_last_error",
+"description": "Возвращает последнюю ошибку из журнала регистрации компактной структурой {date, event, metadata, data, comment}. Шорткат поверх get_event_log для типового запроса агента «расскажи что упало».",
+"inputSchema": {
+"type": "object",
+"properties": {
+"hours": {
+"type": "number",
+"description": "За сколько последних часов искать ошибку (по умолчанию 24). Максимум — 24*30.",
+"default": 24
+},
+"event_substring": {
+"type": "string",
+"description": "Опц.: подстрока в имени события. Полезно, чтобы взять последнюю ошибку конкретной подсистемы."
+}
+}
+}
+},
+{
+"name": "get_access_rights",
+"description": "Возвращает структуру прав текущего пользователя на объект МД: чтение, добавление, изменение, удаление, проведение, отмена проведения, интерактивное чтение и т.д.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"object_name": {
+"type": "string",
+"description": "Полное имя объекта МД (например \"Справочник.Контрагенты\")"
+}
+},
+"required": [
+"object_name"
+]
+}
+},
+{
+"name": "get_setting",
+"description": "Читает значение настройки из РегистрСведений.LN_МСРНастройки по ключу. Возвращает {key, value, found}.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"key": {
+"type": "string",
+"description": "Ключ настройки. Стандартные ключи: execute_code_default_safe, audit_enabled, cache_ttl_seconds, max_response_chars, default_response_format."
+}
+},
+"required": [
+"key"
+]
+}
+},
+{
+"name": "set_setting",
+"description": "Записывает/обновляет настройку в РегистрСведений.LN_МСРНастройки. Транзакционно. Возвращает {key, value, updated}.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"key": {
+"type": "string",
+"description": "Ключ настройки"
+},
+"value": {
+"type": "string",
+"description": "Значение настройки (строкой; для булевых: true/false)"
+},
+"description": {
+"type": "string",
+"description": "Опциональное описание настройки"
+}
+},
+"required": [
+"key",
+"value"
+]
+}
+},
+{
+"name": "request_sampling",
+"description": "Создаёт запрос на сэмплинг (LLM call) в очередь LN_МСРОчередьСэмплинга. Возвращает sample_id; клиент-агент должен опросить pull_pending_sampling, выполнить LLM-вызов и вернуть submit_sampling_result. Результат забирается через get_sampling_result.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"messages": {
+"type": "array",
+"description": "Массив сообщений {role, content} для LLM (MCP-формат). Минимум одно сообщение user."
+},
+"system_prompt": {
+"type": "string",
+"description": "Опц.: системный prompt"
+},
+"max_tokens": {
+"type": "number",
+"description": "Опц.: лимит токенов ответа LLM"
+},
+"model_preferences": {
+"type": "object",
+"description": "Опц.: подсказки клиенту, какую LLM использовать (hints, costPriority, speedPriority, intelligencePriority)."
+}
+},
+"required": [
+"messages"
+]
+}
+},
+{
+"name": "pull_pending_sampling",
+"description": "Забирает следующий pending-запрос из очереди (FIFO). Переводит его в статус in_progress. Возвращает sample_id и payload (messages, system_prompt и т.д.). Если очередь пуста — found=false.",
+"inputSchema": {
+"type": "object",
+"properties": {}
+}
+},
+{
+"name": "submit_sampling_result",
+"description": "Возвращает результат LLM-сэмплинга в очередь. Статус переходит в completed или failed.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"sample_id": {
+"type": "string",
+"description": "ID запроса (из pull_pending_sampling)"
+},
+"content": {
+"type": "object",
+"description": "Содержимое ответа LLM (MCP-формат: { role: 'assistant', content: { type: 'text', text: '...' }, model: '...', stopReason: '...' })."
+},
+"error": {
+"type": "string",
+"description": "Если LLM упал — текст ошибки. Тогда статус будет failed."
+}
+},
+"required": [
+"sample_id",
+"content"
+]
+}
+},
+{
+"name": "get_sampling_result",
+"description": "Возвращает текущее состояние sample_id: { status:'pending|in_progress|completed|failed', content, error }.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"sample_id": {
+"type": "string",
+"description": "ID запроса"
+}
+},
+"required": [
+"sample_id"
+]
+}
+},
+{
+"name": "list_metadata_objects",
+"description": "Получение списка объектов метаданных конфигурации с возможностью фильтрации по типу и имени",
+"inputSchema": {
+"type": "object",
+"properties": {
+"metaType": {
+"type": "string",
+"description": "Тип объекта метаданных",
+"enum": [
+"Catalogs",
+"Documents",
+"InformationRegisters",
+"AccumulationRegisters",
+"AccountingRegisters",
+"CalculationRegisters",
+"ChartsOfCharacteristicTypes",
+"ChartsOfAccounts",
+"ChartsOfCalculationTypes",
+"BusinessProcesses",
+"Tasks",
+"ExchangePlans",
+"FilterCriteria",
+"Reports",
+"DataProcessors",
+"Enums",
+"CommonModules",
+"SessionParameters",
+"CommonTemplates",
+"CommonPictures",
+"XDTOPackages",
+"WebServices",
+"HTTPServices",
+"WSReferences",
+"Styles",
+"Languages",
+"FunctionalOptions",
+"FunctionalOptionsParameters",
+"DefinedTypes",
+"CommonAttributes",
+"CommonCommands",
+"CommandGroups",
+"Constants",
+"CommonForms",
+"Roles",
+"Subsystems",
+"EventSubscriptions",
+"ScheduledJobs",
+"SettingsStorages",
+"Sequences",
+"DocumentJournals",
+"ExternalDataSources",
+"Interfaces"
+]
+},
+"nameMask": {
+"type": "string",
+"description": "Маска имени объекта. Проверяется на вхождение подстроки в имя или синоним объекта."
+},
+"maxItems": {
+"type": "number",
+"description": "Максимальное количество возвращаемых результатов",
+"default": 100
+}
+},
+"required": [
+"metaType"
+]
+}
+},
+{
+"name": "get_metadata_structure",
+"description": "Получение структуры объекта метаданных (реквизиты, табличные части, измерения, ресурсы)",
+"inputSchema": {
+"type": "object",
+"properties": {
+"metaType": {
+"type": "string",
+"description": "Тип объекта метаданных",
+"enum": [
+"Catalogs",
+"Documents",
+"InformationRegisters",
+"AccumulationRegisters",
+"AccountingRegisters",
+"CalculationRegisters",
+"Reports",
+"DataProcessors",
+"ChartsOfCharacteristicTypes",
+"ChartsOfAccounts",
+"ChartsOfCalculationTypes",
+"BusinessProcesses",
+"Tasks",
+"ExchangePlans"
+]
+},
+"name": {
+"type": "string",
+"description": "Точное имя объекта метаданных (без учета регистра)"
+}
+},
+"required": [
+"metaType",
+"name"
+]
+}
+},
+{
+"name": "register_tool",
+"description": "Регистрирует новый MCP tool как запись Справочника.LN_МСРПользовательскиеИнструменты. Tool сразу же становится виден в tools/list (без перезапуска).",
+"inputSchema": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"description": "Имя tool (уникальное, латиница/цифры/_)"
+},
+"description": {
+"type": "string",
+"description": "Описание tool для LLM"
+},
+"input_schema": {
+"type": "string",
+"description": "JSON-схема параметров (object). Если пусто — будет создана схема без свойств."
+},
+"code": {
+"type": "string",
+"description": "Код BSL — тело Выполнить(). Доступны: Аргументы (Структура), Результат (Произвольный, читается обратно)."
+},
+"safe_mode": {
+"type": "boolean",
+"description": "true — перед Выполнить() вызывается УстановитьБезопасныйРежим(Истина). По умолчанию false.",
+"default": false
+},
+"active": {
+"type": "boolean",
+"description": "true (по умолчанию) — tool сразу попадёт в tools/list.",
+"default": true
+}
+},
+"required": [
+"name",
+"description",
+"code"
+]
+}
+},
+{
+"name": "update_tool",
+"description": "Обновляет поля существующего пользовательского tool. Передавайте только те поля, что нужно изменить.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"description": "Имя tool"
+},
+"description": {
+"type": "string",
+"description": "Новое описание"
+},
+"input_schema": {
+"type": "string",
+"description": "Новая JSON-схема"
+},
+"code": {
+"type": "string",
+"description": "Новый код BSL"
+},
+"safe_mode": {
+"type": "boolean",
+"description": "Новый safe_mode"
+},
+"active": {
+"type": "boolean",
+"description": "Новый active"
+}
+},
+"required": [
+"name"
+]
+}
+},
+{
+"name": "delete_tool",
+"description": "Физически удаляет пользовательский tool из справочника.",
+"inputSchema": {
+"type": "object",
+"properties": {
+"name": {
+"type": "string",
+"description": "Имя tool"
+}
+},
+"required": [
+"name"
+]
+}
+},
+{
+"name": "list_custom_tools",
+"description": "Возвращает массив зарегистрированных пользовательских tools со всеми полями (имя, описание, схема, код, активность).",
+"inputSchema": {
+"type": "object",
+"properties": {
+"only_active": {
+"type": "boolean",
+"description": "true (по умолчанию) — только Активен=Истина. false — все.",
+"default": true
+}
+}
+}
+}
+]
+}
+}

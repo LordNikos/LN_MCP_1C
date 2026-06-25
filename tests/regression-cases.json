@@ -1,0 +1,114 @@
+{
+  "tools": [
+    { "name": "execute_query", "arguments": { "query": "ВЫБРАТЬ 1 КАК Один, \"ok\" КАК Слово", "limit": 10 } },
+    { "name": "execute_query", "arguments": { "query": "ВЫБРАТЬ &P1 КАК Когда", "parameters": { "P1": "2024-01-01T12:00:00" }, "include_schema": true } },
+    { "name": "validate_query", "arguments": { "query": "ВЫБРАТЬ 1 КАК А" } },
+    { "name": "validate_query", "arguments": { "query": "ВЫБРАТЬ 1 КАК А", "fast": true } },
+    { "name": "validate_query", "arguments": { "query": "SELECT broken" }, "expect_valid_false": true },
+    { "name": "execute_code", "arguments": { "code": "Результат = 2 + 3;" } },
+    { "name": "execute_code", "arguments": { "code": "Результат = 2 + 3;", "safe_mode": true } },
+    { "name": "get_metadata", "arguments": { "object_name": "Справочник.Валюты" } },
+    { "name": "get_configuration", "arguments": {} },
+    { "name": "describe_form", "arguments": { "object_name": "Справочник.Валюты", "form_name": "ФормаСписка" } },
+    { "name": "list_extensions", "arguments": {} },
+    { "name": "get_bsl_syntax_help", "arguments": { "topic": "ТекущаяДата" } },
+    { "name": "get_link_of_object", "arguments": { "object_name": "Справочник.Валюты", "code": "643" } },
+    { "name": "find_references_to_object", "arguments": { "link": "e1cib://data/Справочник.Валюты?ref=00000000000000000000000000000000", "max_items": 10 }, "expect_tool_error": true },
+    { "name": "get_event_log", "arguments": { "page_size": 5, "levels": ["Error"] } },
+    { "name": "get_event_log", "arguments": { "page_size": 5 } },
+    { "name": "get_last_error", "arguments": { "hours": 24 } },
+    { "name": "get_access_rights", "arguments": { "object_name": "Справочник.Валюты" } },
+    { "name": "get_setting", "arguments": { "key": "execute_code_default_safe" } },
+    { "name": "set_setting", "arguments": { "key": "regression_marker", "value": "ok", "description": "regression test marker" } },
+    { "name": "get_setting", "arguments": { "key": "regression_marker" } },
+    { "name": "execute_dcs", "arguments": { "schema_source": "xml" } },
+    {
+      "name": "execute_query",
+      "arguments": {
+        "query": "ВЫБРАТЬ ПЕРВЫЕ 50 Валюты.Ссылка КАК Ссылка, Валюты.Наименование КАК Наименование ИЗ Справочник.Валюты КАК Валюты УПОРЯДОЧИТЬ ПО Валюты.Наименование",
+        "page_size": 10
+      }
+    },
+    { "name": "register_tool", "arguments": { "name": "ln_sum", "description": "Sum test", "input_schema": "{\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"number\"},\"y\":{\"type\":\"number\"}},\"required\":[\"x\",\"y\"]}", "code": "Результат = Аргументы.x + Аргументы.y;", "active": true } },
+    { "name": "list_custom_tools", "arguments": {} },
+    { "name": "ln_sum", "arguments": { "x": 2, "y": 5 } },
+    { "name": "update_tool", "arguments": { "name": "ln_sum", "description": "Sum updated" } },
+    { "name": "delete_tool", "arguments": { "name": "ln_sum" } },
+    { "name": "read_form_xml", "arguments": { "object_name": "Справочник.Валюты", "form_name": "ФормаСписка", "max_chars": 1000 } },
+    { "name": "request_sampling", "arguments": { "messages": [{ "role": "user", "content": { "type": "text", "text": "ping" } }] } },
+    { "name": "pull_pending_sampling", "arguments": {} }
+  ],
+  "rpc": [
+    { "method": "initialize", "params": { "protocolVersion": "2024-11-05", "capabilities": {} }, "label": "initialize" },
+    { "method": "tools/list", "params": {}, "label": "tools/list" },
+    { "method": "resources/list", "params": {}, "label": "resources/list" },
+    { "method": "prompts/list", "params": {}, "label": "prompts/list" },
+    {
+      "method": "completion/complete",
+      "params": {
+        "ref": { "type": "ref/prompt", "name": "schema_to_form" },
+        "argument": { "name": "object_name", "value": "Справочник." }
+      },
+      "label": "completion:object_name"
+    },
+    {
+      "method": "completion/complete",
+      "params": {
+        "ref": { "type": "ref/prompt", "name": "schema_to_form" },
+        "argument": { "name": "form_name", "value": "Форма" },
+        "context": { "arguments": { "object_name": "Справочник.Валюты" } }
+      },
+      "label": "completion:form_name"
+    },
+    {
+      "method": "completion/complete",
+      "params": {
+        "ref": { "type": "ref/prompt", "name": "_" },
+        "argument": { "name": "key", "value": "execute_code" }
+      },
+      "label": "completion:key"
+    },
+    {
+      "method": "prompts/get",
+      "params": {
+        "name": "refactor_bsl",
+        "arguments": { "code": "Для Сч = 1 По 10 Цикл Сообщить(Сч); КонецЦикла;", "focus": "all" }
+      },
+      "label": "prompt:refactor_bsl"
+    },
+    {
+      "method": "prompts/get",
+      "params": {
+        "name": "code_review_bsl",
+        "arguments": { "code": "Запрос = Новый Запрос(\"ВЫБРАТЬ * ИЗ Справочник.Контрагенты\"); Результат = Запрос.Выполнить();", "strictness": "strict" }
+      },
+      "label": "prompt:code_review_bsl"
+    },
+    {
+      "method": "prompts/get",
+      "params": {
+        "name": "query_generator",
+        "arguments": { "task": "получить все валюты", "metadata_objects": "Справочник.Валюты" }
+      },
+      "label": "prompt:query_generator"
+    },
+    {
+      "method": "prompts/get",
+      "params": {
+        "name": "error_explainer",
+        "arguments": { "error_text": "Поле объекта не обнаружено", "code_context": "Стр.Поле = 1;" }
+      },
+      "label": "prompt:error_explainer"
+    },
+    {
+      "method": "prompts/get",
+      "params": {
+        "name": "schema_to_form",
+        "arguments": { "object_name": "Справочник.Валюты", "form_kind": "list" }
+      },
+      "label": "prompt:schema_to_form"
+    },
+    { "method": "resources/read", "params": { "uri": "ln-mcp://resource/syntax_1c.txt" }, "label": "resource:syntax_1c" },
+    { "method": "resources/read", "params": { "uri": "ln-mcp://ln/_index.json" }, "label": "resource:ln_index" }
+  ]
+}

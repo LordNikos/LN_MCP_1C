@@ -1,0 +1,98 @@
+---
+description: Install LN_MCP_1C extension and connect Cursor MCP (direct HTTP, no proxy)
+globs:
+alwaysApply: false
+---
+
+# LN_MCP_1C — agent setup playbook
+
+Load this rule when the user asks to **install**, **deploy**, or **connect** LN_MCP_1C MCP server.
+
+## Prerequisites
+
+- 1C:Enterprise **8.3.20+** (tested on 8.3.20–8.3.27)
+- File or server infobase with permission to load configuration extensions
+- Web server with 1C publication module (Apache `wsap24.dll` or IIS)
+- Cursor (or any MCP client with HTTP transport + custom headers)
+
+## Repository layout
+
+| Path | Purpose |
+|------|---------|
+| `Configuration.xml` | Extension root — load this in Designer |
+| `install/install.ps1` | Load extension into IB from XML |
+| `publish/default.vrd.example` | Web publication template |
+| `.dev.env.example` | Platform path + IB path for installer |
+| `.cursor/mcp.json.example` | Cursor MCP connection template |
+| `tests/diagnose-cursor-mcp.ps1` | Verify Cursor-compatible MCP |
+| `docs/SETUP.ru.md` | Full human-readable guide (Russian) |
+
+## Installation sequence (mandatory order)
+
+1. **Clone** repository.
+2. **Copy** `.dev.env.example` → `.dev.env`; set `PLATFORM_PATH`, `INFOBASE_PATH`.
+3. **Sync manifest** (if `VERSION` changed): `powershell -File install/fix-extension-manifest.ps1`
+4. **Load extension** (Configurator closed):
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File install/install.ps1
+   ```
+5. **Update DB** — installer runs F7; if manual: Configurator → Update DB.
+6. **Assign role** `LN_МСРРольПолныйДоступ` to the MCP HTTP user.
+7. **Publish** HTTP service:
+   - Copy `publish/default.vrd.example` → web publish folder as `default.vrd`
+   - Set `base=` (URL prefix) and `ib=` (connection string)
+   - `rootUrl` must be **`mcp`** (matches `HTTPServices.mcp_APIBackend.RootURL`)
+   - MCP endpoint: `http://host/{base}/hs/mcp/rpc`
+8. **Restart** web server / 1C cluster.
+9. **Configure Cursor** — project `.cursor/mcp.json`:
+   ```json
+   {
+     "mcpServers": {
+       "ln-mcp": {
+         "url": "http://localhost:PORT/BASE/hs/mcp/rpc",
+         "headers": {
+           "Authorization": "Basic BASE64"
+         }
+       }
+     }
+   }
+   ```
+   Generate Base64: `[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes("User:Password"))`
+10. **Verify**:
+    ```powershell
+    powershell -File tests/diagnose-cursor-mcp.ps1 -BaseUrl "http://..." -Username "..." -Password "..."
+    ```
+    Expected: GET→405, Cursor initialize OK, **27+ tools**.
+
+## Forbidden workarounds
+
+- Do **not** add `mcp-remote`, Node bridges, or local proxies unless the user explicitly requests them.
+- Direct `url` + `headers.Authorization` in `.cursor/mcp.json` is the supported Cursor setup.
+
+## Optional settings (after connect)
+
+Via `set_setting` tool or register `LN_МСРНастройки`:
+
+| Key | Purpose |
+|-----|---------|
+| `config_dump_path` | Path to XML config dump for `read_form_xml` |
+| `execute_code_default_safe` | `"true"` to default safe mode for `execute_code` |
+| `default_response_format` | `json` / `toon` / `json-compact` |
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---------|-----|
+| Cursor "Parse error" on initialize | Load extension **≥1.0.18**, F7, restart web |
+| Connection closed / OAuth | Use direct HTTP in `mcp.json`, not stdio proxy |
+| 401 Unauthorized | Fix Basic Auth header; check `.vrd` user |
+| 404 on `/hs/mcp/rpc` | Wrong `base` or `rootUrl` not `mcp` |
+| Old tool list | F7 + `fix-extension-manifest.ps1` if VERSION bumped |
+
+## Working with MCP (for end users)
+
+- **Tools** — agent calls automatically (`get_metadata`, `execute_query`, …).
+- **Prompts** — user writes normal tasks; agent follows prompt logic via tools.
+- **Resources** — agent reads via `resources/read` when needed; user does not configure URIs manually.
+
+Point users to `docs/SETUP.ru.md` for step-by-step screenshots-level detail.

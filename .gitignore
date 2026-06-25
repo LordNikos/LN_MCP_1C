@@ -1,0 +1,27 @@
+# Build / export
+*.cfe
+*.cf
+*.log
+1cv8*.log
+
+# Local env (never commit credentials)
+.dev.env
+.env
+*.local.json
+.cursor/mcp.json
+
+# Test artifacts
+tests/regression-report.md
+tests/*.tmp
+tests/out/
+
+# OS / IDE
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*~
+
+# Accidental copies with real IB paths
+publish/default.vrd.local

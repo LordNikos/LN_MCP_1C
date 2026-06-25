@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ln-mcp-my-base": {
+      "url": "http://localhost:8080/YOUR_PUBLISH/hs/mcp/rpc",
+      "headers": {
+        "Authorization": "Basic BASE64_USER_COLON_PASSWORD"
+      }
+    }
+  }
+}

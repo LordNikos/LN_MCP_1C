@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MetaDataObject xmlns="http://v8.1c.ru/8.3/MDClasses" xmlns:app="http://v8.1c.ru/8.2/managed-application/core" xmlns:cfg="http://v8.1c.ru/8.1/data/enterprise/current-config" xmlns:cmi="http://v8.1c.ru/8.2/managed-application/cmi" xmlns:ent="http://v8.1c.ru/8.1/data/enterprise" xmlns:lf="http://v8.1c.ru/8.2/managed-application/logform" xmlns:style="http://v8.1c.ru/8.1/data/ui/style" xmlns:sys="http://v8.1c.ru/8.1/data/ui/fonts/system" xmlns:v8="http://v8.1c.ru/8.1/data/core" xmlns:v8ui="http://v8.1c.ru/8.1/data/ui" xmlns:web="http://v8.1c.ru/8.1/data/ui/colors/web" xmlns:win="http://v8.1c.ru/8.1/data/ui/colors/windows" xmlns:xen="http://v8.1c.ru/8.3/xcf/enums" xmlns:xpr="http://v8.1c.ru/8.3/xcf/predef" xmlns:xr="http://v8.1c.ru/8.3/xcf/readable" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.20">
+	<Catalog uuid="b1c2d3e4-f5a6-7b8c-9d0e-1f2a3b4c5d6e">
+		<InternalInfo>
+			<xr:GeneratedType name="CatalogRef.LN_МСРПользовательскиеИнструменты" category="Ref">
+				<xr:TypeId>b1c2d3e4-1400-aaaa-0000-000000000001</xr:TypeId>
+				<xr:ValueId>b1c2d3e4-1400-aaaa-0000-000000000002</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogObject.LN_МСРПользовательскиеИнструменты" category="Object">
+				<xr:TypeId>b1c2d3e4-1400-aaaa-0000-000000000003</xr:TypeId>
+				<xr:ValueId>b1c2d3e4-1400-aaaa-0000-000000000004</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogSelection.LN_МСРПользовательскиеИнструменты" category="Selection">
+				<xr:TypeId>b1c2d3e4-1400-aaaa-0000-000000000005</xr:TypeId>
+				<xr:ValueId>b1c2d3e4-1400-aaaa-0000-000000000006</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogList.LN_МСРПользовательскиеИнструменты" category="List">
+				<xr:TypeId>b1c2d3e4-1400-aaaa-0000-000000000007</xr:TypeId>
+				<xr:ValueId>b1c2d3e4-1400-aaaa-0000-000000000008</xr:ValueId>
+			</xr:GeneratedType>
+			<xr:GeneratedType name="CatalogManager.LN_МСРПользовательскиеИнструменты" category="Manager">
+				<xr:TypeId>b1c2d3e4-1400-aaaa-0000-000000000009</xr:TypeId>
+				<xr:ValueId>b1c2d3e4-1400-aaaa-0000-00000000000a</xr:ValueId>
+			</xr:GeneratedType>
+		</InternalInfo>
+		<Properties>
+			<Name>LN_МСРПользовательскиеИнструменты</Name>
+			<Synonym>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>МСР Пользовательские инструменты (LN, tools-as-data)</v8:content>
+				</v8:item>
+			</Synonym>
+			<Comment>Справочник динамических MCP tools. Каждый активный элемент попадает в tools/list. Код выполняется в контейнере LN_МСРИнструментПользовательские.</Comment>
+			<Hierarchical>false</Hierarchical>
+			<UseStandardCommands>true</UseStandardCommands>
+			<Owners/>
+			<CodeAllowedLength>Variable</CodeAllowedLength>
+			<CodeSeries>WholeCatalog</CodeSeries>
+			<CodeLength>11</CodeLength>
+			<DescriptionLength>100</DescriptionLength>
+			<CodeType>String</CodeType>
+			<CheckUnique>true</CheckUnique>
+			<Autonumbering>true</Autonumbering>
+			<DefaultPresentation>AsDescription</DefaultPresentation>
+			<EditType>InDialog</EditType>
+			<ChoiceMode>BothWays</ChoiceMode>
+			<DataLockControlMode>Managed</DataLockControlMode>
+			<FullTextSearch>Use</FullTextSearch>
+			<ObjectPresentation>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Пользовательский MCP-инструмент</v8:content>
+				</v8:item>
+			</ObjectPresentation>
+			<ListPresentation>
+				<v8:item>
+					<v8:lang>ru</v8:lang>
+					<v8:content>Пользовательские MCP-инструменты</v8:content>
+				</v8:item>
+			</ListPresentation>
+		</Properties>
+		<ChildObjects>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000001">
+				<Properties>
+					<Name>ИмяТула</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Имя tool (попадает в tools/list)</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment>То, что MCP-клиент видит как поле name. Только латиница, цифры, underscore.</Comment>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>100</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+					<FillChecking>ShowError</FillChecking>
+					<Indexing>Index</Indexing>
+					<FullTextSearch>Use</FullTextSearch>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000002">
+				<Properties>
+					<Name>ОписаниеТула</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Описание (description для LLM)</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+					<FullTextSearch>Use</FullTextSearch>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000003">
+				<Properties>
+					<Name>СхемаПараметров</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>JSON-схема параметров (inputSchema)</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment>Полная JSON-схема в формате MCP, например {"type":"object","properties":{...},"required":[...]}.</Comment>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000004">
+				<Properties>
+					<Name>КодBSL</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Код BSL (тело Выполнить)</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment>В коде доступны: Аргументы (Структура аргументов вызова), Результат (Произвольный, читается обратно). Пример: Результат = Аргументы.x + Аргументы.y;</Comment>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>0</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000005">
+				<Properties>
+					<Name>Активен</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Активен (попадает в tools/list)</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000006">
+				<Properties>
+					<Name>БезопасныйРежим</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Выполнять в безопасном режиме</v8:content>
+						</v8:item>
+					</Synonym>
+					<Comment>Если истина — перед Выполнить() вызывается УстановитьБезопасныйРежим(Истина).</Comment>
+					<Type>
+						<v8:Type>xs:boolean</v8:Type>
+					</Type>
+				</Properties>
+			</Attribute>
+			<Attribute uuid="b1c2d3e4-1001-0000-0000-000000000007">
+				<Properties>
+					<Name>АвторСоздания</Name>
+					<Synonym>
+						<v8:item>
+							<v8:lang>ru</v8:lang>
+							<v8:content>Автор создания</v8:content>
+						</v8:item>
+					</Synonym>
+					<Type>
+						<v8:Type>xs:string</v8:Type>
+						<v8:StringQualifiers>
+							<v8:Length>100</v8:Length>
+							<v8:AllowedLength>Variable</v8:AllowedLength>
+						</v8:StringQualifiers>
+					</Type>
+				</Properties>
+			</Attribute>
+		</ChildObjects>
+	</Catalog>
+</MetaDataObject>

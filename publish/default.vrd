@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Шаблон публикации. Скопируйте в рабочий каталог публикации и отредактируйте base= / ib=.
+  URL MCP: http://host/{base}/hs/mcp/rpc
+  Не коммитьте файл с реальными паролями.
+-->
+<point xmlns="http://v8.1c.ru/8.2/virtual-resource-system"
+       xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       base="/YOUR_PUBLISH_NAME"
+       ib="File=&quot;C:\Path\To\Infobase&quot;;Usr=&quot;Admin&quot;;Pwd=&quot;&quot;;"
+       enable="false">
+
+  <httpServices publishByDefault="false"
+                publishExtensionsByDefault="false">
+    <service name="mcp_APIBackend"
+             rootUrl="mcp"
+             enable="true"
+             reuseSessions="autouse"
+             sessionMaxAge="20"
+             poolSize="10"
+             poolTimeout="5"/>
+  </httpServices>
+
+  <webServices publishByDefault="false"/>
+  <standardOdata enable="false"/>
+  <openManagedApplicationClient enable="false"/>
+</point>
