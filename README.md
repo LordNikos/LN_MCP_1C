@@ -266,3 +266,15 @@ pwsh -File tests/regression.ps1 -BaseUrl "http://localhost/mcp_demo/hs/api" -Out
 - Архитектурное ядро: [github.com/vladimir-kharin/1c_mcp](https://github.com/vladimir-kharin/1c_mcp) (MIT).
 - Семантика `execute_query` / `execute_code` / `get_event_log`: [github.com/ROCTUP/1c-mcp-toolkit](https://github.com/ROCTUP/1c-mcp-toolkit) (GPL-3, реализация — clean-room rewrite в BSL).
 - Спецификация MCP: [modelcontextprotocol.io](https://modelcontextprotocol.io/).
+
+## Пример пользовательского tool'а: `clear_register`
+
+Admin-tool, который очищает независимый регистр сведений по имени одной транзакцией (пустой `НаборЗаписей` без отбора). Регистрируется через `register_tool` в любой базе с расширением `LN_MCP_1C`.
+
+Подробнее: [`docs/custom-tools-ru.md`](docs/custom-tools-ru.md) — устройство, ограничение `Выполнить()` (bare-менеджеры недоступны → обход через `Новый(Тип(...))`), перенос в другую базу, multi-base в Cursor.
+
+Идемпотентный скрипт-регистратор: [`scripts/register_clear_register.ps1`](scripts/register_clear_register.ps1).
+
+```powershell
+.\scripts\register_clear_register.ps1 -BaseUrl "http://localhost:81/BASE" -User IBT -Password "PASSWORD"
+```
